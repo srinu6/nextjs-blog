@@ -1,7 +1,24 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { sequelize } from "..";
 
-export const User = sequelize.define("Users", {
+interface UserAttributes {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
+type UserCreationAttributes = Optional<UserAttributes, "id">;
+
+interface UserInstance
+  extends Model<UserAttributes, UserCreationAttributes>,
+    UserAttributes {
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export const User = sequelize.define<UserInstance>("Users", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -17,6 +34,7 @@ export const User = sequelize.define("Users", {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,

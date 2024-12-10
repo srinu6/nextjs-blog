@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { LoginAction } from "./action";
 
 export default function LoginPage() {
   return (
@@ -18,7 +19,7 @@ export default function LoginPage() {
         <CardHeader>
           <CardTitle>Login</CardTitle>
         </CardHeader>
-        <form>
+        <form action={LoginAction}>
           <CardContent>
             <div className="">
               <Label htmlFor="email" className="inline-block mb-2">
