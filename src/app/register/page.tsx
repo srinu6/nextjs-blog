@@ -17,8 +17,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { registerSchema } from "./schema";
 import { RegisterAction } from "./action";
+import { startTransition, useActionState } from "react";
 
 export default function RegisterPage() {
+  const [state, action, isPending] = useActionState(RegisterAction, undefined);
   const {
     register,
     handleSubmit,
@@ -28,8 +30,8 @@ export default function RegisterPage() {
     mode: "onBlur",
   });
 
-  const formSubmit = (data: any) => {
-    RegisterAction(data);
+  const formSubmit = (data) => {
+    startTransition(() => action(data));
   };
 
   return (
@@ -76,6 +78,11 @@ export default function RegisterPage() {
                     {errors.email.message?.toString()}
                   </span>
                 )}
+                {state?.message && (
+                  <p className=" text-red-400 text-sm  font-medium">
+                    {state?.message}
+                  </p>
+                )}
               </div>
               <div className="">
                 <Label htmlFor="password" className="inline-block mb-2">
@@ -95,7 +102,9 @@ export default function RegisterPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col items-start">
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isPending}>
+              Submit
+            </Button>
             <p className="mt-2 text-sm">
               Already have an account?
               <Link

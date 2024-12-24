@@ -11,7 +11,7 @@ interface UserAttributes {
 
 type UserCreationAttributes = Optional<UserAttributes, "id">;
 
-interface UserInstance
+export interface UserInstance
   extends Model<UserAttributes, UserCreationAttributes>,
     UserAttributes {
   createdAt?: Date;
@@ -41,3 +41,11 @@ export const User = sequelize.define<UserInstance>("Users", {
     allowNull: false,
   },
 });
+
+// User.drop()
+//   .then(() => {
+//     console.log("Dropped the user table");
+//   })
+//   .catch((error) => {
+//     console.error("unable to drop user table", error);
+//   });

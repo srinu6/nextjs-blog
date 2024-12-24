@@ -47,3 +47,9 @@ export async function LoginAction(data: FormData) {
     throw e;
   }
 }
+
+export async function LogoutAction() {
+  const cookieStore = await cookies();
+  cookieStore.delete("session");
+  redirect("/login");
+}

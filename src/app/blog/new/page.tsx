@@ -1,14 +1,28 @@
 "use client";
 
 import { Container } from "@/components/ui/custom/container";
-import { Editor } from "@/components/ui/custom/editor";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { CreateBlogAction } from "./action";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(
+  () => import("@/components/ui/custom/editor").then((x) => x.Editor),
+  {
+    ssr: false,
+    loading: () => <p>Loading...</p>,
+  }
+);
 
 export default function Blog() {
+  const [title, setTitle] = useState("");
   const [editorData, setEditorData] = useState("");
+
+  const handlePublish = () => {
+    CreateBlogAction({ title, content: editorData });
+  };
 
   return (
     <Container>
@@ -16,11 +30,17 @@ export default function Blog() {
       <Label htmlFor="title" className="inline-block mb-2">
         Title
       </Label>
-      <Input id="title" />
+      <Input
+        id="title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
       <div className="my-4">
         <Editor data={editorData} onChange={(data) => setEditorData(data)} />
       </div>
-      <Button>Publish</Button>
+      <Button onClick={handlePublish} disabled={!title || !editorData}>
+        Publish
+      </Button>
     </Container>
   );
 }
