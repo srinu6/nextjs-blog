@@ -5,6 +5,7 @@ import { Blog } from "@/db/models/blog";
 import { FilePenLine, SquareChartGantt, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { DeleteBlogAction } from "./action";
+import { getSession } from "@/lib/session";
 
 type Props = {
   params: Promise<{ authorId: string }>;
@@ -12,7 +13,8 @@ type Props = {
 
 export default async function AuthorBlogsPage({ params }: Props) {
   const { authorId } = await params;
-
+  const token = await getSession();
+  const userId = token?.userDetails?.id;
   const blogs = await Blog.findAll({
     where: {
       userId: authorId,
@@ -30,7 +32,7 @@ export default async function AuthorBlogsPage({ params }: Props) {
                   <SquareChartGantt /> View
                 </Link>
               </Button>
-              <Button type="button" asChild variant="outline">
+              <Button type="button" asChild variant="outline" disabled={userId !== b.userId}>
                 <Link
                   href={{
                     pathname: "/blog/edit",
@@ -48,7 +50,7 @@ export default async function AuthorBlogsPage({ params }: Props) {
                   name="authorId"
                   defaultValue={authorId}
                 />
-                <Button type="submit" variant="outline">
+                <Button type="submit" variant="outline" disabled={userId !== b.userId}>
                   <Trash2 /> Delete
                 </Button>
               </form>
