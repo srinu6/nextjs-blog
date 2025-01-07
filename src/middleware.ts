@@ -16,13 +16,20 @@ export const config = {
 };
 
 const shouldRedirect = (url: string) => {
-  const unprotectedRoutes = ["/login", "/register"];
+  const unprotectedRoutes = ["/", "/blog", "/login", "/register"];
   let flag = true;
+  const urlPath = new URL(url).pathname;
   for (let i = 0; i < unprotectedRoutes.length; i++) {
-    if (new URL(url).pathname === unprotectedRoutes[i]) {
+    if (urlPath === unprotectedRoutes[i]) {
       flag = false;
       break;
     }
+  }
+  if (
+    urlPath.startsWith("/blog") &&
+    !["/blog/new", "/blog/edit"].includes(urlPath)
+  ) {
+    flag = false;
   }
   return flag;
 };

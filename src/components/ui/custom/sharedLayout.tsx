@@ -2,14 +2,14 @@
 
 import { usePathname } from "next/navigation";
 import React from "react";
-import Header from "./header";
 
 export default function SharedLayout({
+  header,
   children,
 }: {
+  header: React.ReactNode;
   children: React.ReactNode;
 }) {
-console.log("coming to here...")
   const pathName = usePathname();
   const nonLayoutRoutes = ["/login", "/register"];
   const shouldRenderLayout = !nonLayoutRoutes.includes(pathName);
@@ -17,7 +17,7 @@ console.log("coming to here...")
     <main>
       {shouldRenderLayout ? (
         <>
-          <Header />
+          {header}
           <main>{children}</main>
         </>
       ) : (
